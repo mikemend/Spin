@@ -1,0 +1,224 @@
+<html>
+<head>
+<script src="js/jq10.js"></script>
+<script src="js/d3.js" charset="utf-8"></script>
+<script src="js/home.js"></script>
+<script src="js/app.js"></script>
+<script src="http://atomicbubbleapps.com/starspin/test.js"></script>
+<link rel="stylesheet" type="text/css" href="css/pure.css">
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="css/buttons.css">
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0,user-scalable=no;user-scalable=0;"/>
+</head> 
+<body>
+<div class="scrn visible"id ="main">
+		<div class = "mainNav">
+		<button class='pure-button pure-button-primary notice playNav' id="playNav" onClick="nav('play')"> <i class="icon-play"> </i> Start</button>
+		<button class='pure-button pure-button-primary notice settings' id="settingsNav" onClick="nav('settings')"> <i class="fa fa-cog"></i>Settings</button>
+		<button class='pure-button pure-button-primary notice leader ' id="leaderNav" onClick="getLeaderBoard()">LeaderBoard</button>
+		</div>
+</div>
+<div class="scrn"id ="play"> 
+  <div class="nav">
+    <div class="button cont"  id="1">L</div>
+    <div class="button cont" id="2">R</div>
+    <div class="button cont" style="font-size: 100%;"id ="startPause" onClick="down(0)">Pause</div>
+    <div class="button cont" style="font-size: 100%;" onClick="nav('main')">back</div>
+  </div>
+</div>
+<div class="scrn"id ="gameover"> 
+  <h1>You Lost :( </h1>
+  <input class ="tb" type="text" name="score_go"  id="score_go"  disabled value="">
+  <br>
+  <input  class ="tb" type="text" name="username_go" id="username_go" maxlength="10" placeholder="User...">
+  <button class='pure-button pure-button-primary notice playNav' id="update" onClick="update()">Submit New High Score </button>
+  <button class='pure-button pure-button-primary notice playNav' id="playNav" onClick="nav('play')">Play Again</button>
+  <button class='pure-button pure-button-primary notice playNav ' id="mainNav" onClick="nav('main')">Back</button>
+</div>
+<div class="scrn"id ="settings"> 
+ <h1> Settings</h1>
+  <button class='pure-button pure-button-primary notice playNav' id="soundOff" onClick="mute(true);">Sound Off</button>
+  <button class='pure-button pure-button-primary notice playNav pure-button-disabled' id="soundOn" onClick="mute(false);">Sound On</button>
+  <button class='pure-button pure-button-primary notice playNav' id="mainNav" onClick="nav('main')">Back</button>
+</div>
+<div class="scrn"id ="leader">
+<h1> Leaderboard</h1> 
+  <button class='pure-button pure-button-primary notice playNav' id="mainNav" onClick="nav('main')">Back</button>
+	<div id ="leaderboard">
+
+	</div>
+</div>
+</body>
+<script>
+	 var snd_back = 'assets/back.mp3';
+	 var snd_nav = 'assets/nav.mp3'
+	 var snd_eat  = 'assets/eat.mp3'
+	 var snd_miss = 'assets/miss.mp3';
+	 var snd_multi = 'assets/multi.mp3'
+	 var lla;
+	 var web;
+	 mute(isMute());
+     var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+      if ( app ) {
+      document.write('<script type="text/javascript" src="cordova.js"><\/script>');
+	  document.write('<script type="text/javascript" src="js/audio.js"><\/script>');
+	  document.write('<script type="text/javascript" src="js/admob.js"><\/script>');
+	  web = false;
+      } else {
+      web = true;
+      }
+	  
+document.addEventListener('deviceready', appReady, false);
+ 
+function isMute(){
+return localStorage.getItem("mute") == "true" ? true : false;
+}
+
+function appReady(){
+		var osVersionDel = device.version;
+		var splitted = osVersionDel.split('.');
+		if (parseInt(splitted[0]) >=4){
+			if (parseInt(splitted[1]) >=4){
+				document.body.style.background = "url('css/giphy.gif')repeat";
+			}
+		}
+  		lla = window.plugins.LowLatencyAudio;
+  		lla = window.plugins.LowLatencyAudio;
+		lla.preloadAudio( snd_back, snd_back, 1, function(msg){}, function(msg){});
+   	 	lla.preloadFX( snd_eat, snd_eat, function(msg){}, function(msg){});
+		lla.preloadFX( snd_miss, snd_miss, function(msg){}, function(msg){});
+		lla.preloadFX( snd_multi, snd_multi, function(msg){}, function(msg){});
+		lla.preloadFX( snd_nav, snd_nav, function(msg){}, function(msg){});
+		$('.button').disableSelection(); 
+		nav('main'); 
+		$(".scrn").hide(); 
+		//admob.initAdmob("ca-app-pub-6168123933556681/3172245254","ca-app-pub-6168123933556681/4648978454"); // banner,inter
+		//admob.showBanner(admob.BannerSize.BANNER,admob.Position.BOTTOM_APP,admob.Params);
+		//admob.cacheInterstitial();
+		window.game.setUp();
+
+    //callback
+    window.game.onLoginSucceeded = function(result) {
+        var playerDetail = result;
+        alert('onLoginSucceeded: ' + playerDetail['playerId'] + ' ' + playerDetail['playerDisplayName']);
+    };  
+    window.game.onLoginFailed = function() {
+        alert('onLoginFailed');
+    };
+    window.game.onGetPlayerImageSucceeded = function(result) {
+        var playerImageUrl = result;
+        alert('onGetPlayerImageSucceeded: ' + playerImageUrl);
+    };
+    window.game.onGetPlayerImageFailed = function() {
+        alert('onGetPlayerImageFailed');
+    };  
+    window.game.onGetPlayerScoreSucceeded = function(result) {
+        var playerScore = result;
+        alert('onGetPlayerScoreSucceeded: ' + playerScore);
+    };
+    window.game.onGetPlayerScoreFailed = function() {
+        alert('onGetPlayerScoreFailed');
+    };
+    //  
+    window.game.onSubmitScoreSucceeded = function() {
+        alert('onSubmitScoreSucceeded');
+    };  
+    window.game.onSubmitScoreFailed = function() {
+        alert('onSubmitScoreFailed');
+    };  
+    //  
+    window.game.onUnlockAchievementSucceeded = function() {
+        alert('onUnlockAchievementSucceeded');
+    };  
+    window.game.onUnlockAchievementFailed = function() {
+        alert('onUnlockAchievementFailed');
+    };
+    window.game.onIncrementAchievementSucceeded = function() {
+        alert('onIncrementAchievementSucceeded');
+    };  
+    window.game.onIncrementAchievementFailed = function() {
+        alert('onIncrementAchievementFailed');
+    };
+    window.game.onResetAchievementsSucceeded = function() {
+        alert('onResetAchievementsSucceeded');
+    };  
+    window.game.onResetAchievementsFailed = function() {
+        alert('onResetAchievementsFailed');
+    };
+		
+}
+
+function play (id) {
+	if(!web && window.plugins.LowLatencyAudio && !isMute()) {
+	lla.play( id );
+	}
+}
+function loop (id) {
+	if(!web && window.plugins.LowLatencyAudio && !isMute()) {
+	lla.loop( id );
+	}
+}
+function stopp (id) {
+	if(!web && window.plugins.LowLatencyAudio && !isMute()) {
+	lla.stop( id );
+	}
+}
+
+function mute(on) {
+var off = $('#soundOff');
+var onn = $('#soundOn');
+if (on){
+localStorage.setItem("mute", true);
+$(onn ).removeClass("pure-button-disabled");
+$(off ).addClass("pure-button-disabled");
+return;
+}
+localStorage.setItem("mute", false);
+$(off ).removeClass("pure-button-disabled");
+$(onn ).addClass("pure-button-disabled");
+}
+
+function nav(on){
+	  play (snd_nav);
+      var off;
+      off = $('.scrn.visible');
+      $(off).fadeOut('fast', function() {
+      $(off ).removeClass("visible");
+      on = "#" + on;
+      $(on ).addClass("visible");
+      $(on).fadeIn('fast');
+      });
+      if (on == 'play'){
+      down(0);
+	  loop(snd_back);
+	  }
+	  if (on == 'main'){
+	  pauseGame();
+	  stopp(snd_back);
+      }
+	  if (on == 'gameover'){
+	  $('#username_go').val(localStorage.getItem('uname'));
+			  admob.isInterstitialReady(function(isReady){
+            if(isReady){
+                admob.showInterstitial();
+            }
+        });
+	  }
+	  
+}
+	  
+    $('.button').on('mousedown touchstart', function(e) {
+      	e.stopPropagation();
+			 $(this).css({backgroundColor:'red'});
+             down(this.id);
+      });
+    $('.button').on('mouseup touchend', function(e) {  
+      	e.stopPropagation();
+			$(this).css({backgroundColor:'rgb(95, 13, 13)'});	
+             up(this.id);
+      });
+
+
+</script>
+</html>
+</html>

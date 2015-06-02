@@ -1,0 +1,100 @@
+@font-face {
+    font-family: mag;
+    src: url(mag.ttf);
+}
+
+body {
+    overflow:hidden;
+	font-family: mag;
+    background:#000;
+    padding:0px;
+    margin:0px;
+    min-height:100%;
+	color: white;
+	background: url("back.jpg")repeat;
+}
+h1{
+margin:0;
+text-align:center;
+}
+.tb{
+width: 100%;
+font-size:40px;
+margin-bottom:5px;
+}
+.nav .button{
+font-weight: bold;
+font-size: 50px;
+background-color: #fff;
+text-align: center;
+text-decoration: none;
+text-transform: uppercase;
+float: left;
+width: 48%;
+border: double;
+}
+.nav{
+	position: absolute;
+	bottom:10%;
+	width: 100%;
+}
+.scrn {
+	width: 100%;
+	height: 100%;
+}
+
+
+
+.nav .cont{
+background-color: rgb(95, 13, 13);
+border-color: black;
+margin-bottom: 3px;
+font-size: 75px;
+}
+
+#main, .main {
+  background-color: transparent;
+}
+#play, .play {
+  background-color: transparent;
+}
+#settings, .settings {
+  background-color: transparent;
+}
+#leader, .leader{
+  background-color: transparent;
+}
+#gameover, .gameover {
+  background-color: transparent;
+}
+.playNav{
+  background-color: transparent;
+}
+
+.mainNav {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	color: #f9f1e9;
+	text-align: center;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate3d(-50%,-50%,0);
+	transform: translate3d(-50%,-50%,0);
+	width:90%;
+}
+.notice{
+height:50px;
+width:100%;
+border-radius: 4px;
+margin-bottom: 25px;
+color:#7DF9FF;
+}
+
+.leader tr:first-child td {
+   background-color: green;
+}
+.loading {
+  background: url("loading.gif");
+  height:14px;
+}
